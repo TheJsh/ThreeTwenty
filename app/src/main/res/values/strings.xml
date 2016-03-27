@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">Three Twenty</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to MainActivity -->
+    <string name="help_text">tap the center to start and stop the timer</string>
+    <string name="help_text_show_skip">tap and hold the center to skip</string>
+    <string name="help_text_awaiting_user">tap the center to continue</string>
+
+    <string name="message1_1">work hard</string>
+    <string name="message2_1">stay focused</string>
+    <string name="message1_2">take a break</string>
+    <string name="message2_2">rest your eyes</string>
+
+    <!-- Strings related to Settings -->
+
+    <string name="pref_use_amoled">Use AMOLED theme</string>
+    <string name="pref_use_amoled_summary">Restart app to switch themes</string>
+
+    <string name="pref_use_vibrations">Vibrations</string>
+
+    <string name="pref_use_notifications">Notifications</string>
+
+    <string name="pref_timer_length">Timer length</string>
+    <string name="pref_timer_length_summary">Time to wait until the resting period</string>
+    <string-array name="pref_timer_lengths">
+        <item>1 minute (debug)</item>
+        <item>20 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>1.5 hours</item>
+        <item>2 hours</item>
+    </string-array>
+
+    <!-- Timer lengths in minutes -->
+    <string-array name="pref_timer_length_values">
+        <item>1</item>
+        <item>20</item>
+        <item>30</item>
+        <item>60</item>
+        <item>90</item>
+        <item>120</item>
+    </string-array>
+
+    <string name="pref_cooldown_length">Resting period length</string>
+    <string name="pref_cooldown_length_summary">Time to wait for the resting period</string>
+    <string-array name="pref_cooldown_lengths">
+        <item>10 seconds</item>
+        <item>20 seconds</item>
+        <item>30 seconds</item>
+        <item>40 seconds</item>
+        <item>50 seconds</item>
+        <item>1 minute</item>
+    </string-array>
+
+    <!-- Cooldown lengths in seconds -->
+    <string-array name="pref_cooldown_length_values">
+        <item>10</item>
+        <item>20</item>
+        <item>30</item>
+        <item>40</item>
+        <item>50</item>
+        <item>60</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,40 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- AMOLED theme -->
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="amoled_key"
+        android:title="@string/pref_use_amoled"
+        android:summary="@string/pref_use_amoled_summary" />
+
+    <!-- Vibrations switch -->
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="vibrations_key"
+        android:title="@string/pref_use_vibrations" />
+
+    <!-- Notifications switch -->
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="notifications_key"
+        android:title="@string/pref_use_notifications" />
+
+    <!-- Timer picker -->
+    <ListPreference
+        android:defaultValue="20"
+        android:entries="@array/pref_timer_lengths"
+        android:entryValues="@array/pref_timer_length_values"
+        android:key="timer_key"
+        android:title="@string/pref_timer_length"
+        android:summary="@string/pref_timer_length_summary" />
+
+    <!-- Cooldown picker -->
+    <ListPreference
+        android:defaultValue="20"
+        android:entries="@array/pref_cooldown_lengths"
+        android:entryValues="@array/pref_cooldown_length_values"
+        android:key="cooldown_key"
+        android:title="@string/pref_cooldown_length"
+        android:summary="@string/pref_cooldown_length_summary" />
+
+</PreferenceScreen>
