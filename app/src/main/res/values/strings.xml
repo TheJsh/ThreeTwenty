@@ -22,6 +22,7 @@
 
     <string name="pref_use_notifications">Notifications</string>
 
+    <!-- Timer -->
     <string name="pref_timer_length">Timer length</string>
     <string name="pref_timer_length_summary">Time to wait until the resting period</string>
     <string-array name="pref_timer_lengths">
@@ -32,9 +33,7 @@
         <item>1.5 hours</item>
         <item>2 hours</item>
     </string-array>
-
-    <!-- Timer lengths in minutes -->
-    <string-array name="pref_timer_length_values">
+    <string-array name="pref_timer_length_values"> <!-- in minutes -->
         <item>1</item>
         <item>20</item>
         <item>30</item>
@@ -43,6 +42,7 @@
         <item>120</item>
     </string-array>
 
+    <!-- Cooldown -->
     <string name="pref_cooldown_length">Resting period length</string>
     <string name="pref_cooldown_length_summary">Time to wait for the resting period</string>
     <string-array name="pref_cooldown_lengths">
@@ -53,9 +53,7 @@
         <item>50 seconds</item>
         <item>1 minute</item>
     </string-array>
-
-    <!-- Cooldown lengths in seconds -->
-    <string-array name="pref_cooldown_length_values">
+    <string-array name="pref_cooldown_length_values"> <!-- in seconds -->
         <item>10</item>
         <item>20</item>
         <item>30</item>

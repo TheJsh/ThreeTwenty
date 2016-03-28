@@ -45,9 +45,8 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     // Values for the timer
-    private long totalTime;
     private Vibrator vibrator; // giggity
-    private TextView timeRemainText, timeTypeText, infoText;
+    private TextView timeRemainText, timeTypeText, infoText, message1Text, message2Text;
     private CustomCountDownTimer timer;
     private ObjectAnimator timerAnimation;
     private TranslateAnimation message1Animation, message2Animation;
@@ -72,10 +71,12 @@ public class MainActivity extends AppCompatActivity {
     // 2 - awaiting user tap
     // 3 - counting down seconds
     public int stage;
-    public boolean timerRunning, inStages, infoHidden, currentlySkipping;
+    public boolean timerRunning, inStages, infoHidden, currentlySkipping, messagesHidden;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Log.d("messagesHidden", "" + messagesHidden);
 
         // Load preferences
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -119,22 +120,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-        totalTime = 5000; // 5 seconds debug
-
         // Vibrator
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         // Timer and animation
         timeRemainText = (TextView) this.findViewById(R.id.timeRemain);
         timeTypeText = (TextView) this.findViewById(R.id.timeType);
+        timeRemainText.setText("0");
+        timeTypeText.setText("minutes");
         timer = new CustomCountDownTimer(0, 1000);
         timerAnimation = ObjectAnimator.ofInt(progressBar, "progress", MAX_PROGRESS, 0);
-        timerAnimation.setDuration(totalTime);
-        timerAnimation.setInterpolator(linearInterpolator);
         timerTextAnimation = ValueAnimator.ofInt(0, 20);
-        timerTextAnimation.setDuration(totalTime);
 
         timerTextAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -142,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
                 timeRemainText.setText(valueAnimator.getAnimatedValue().toString());
             }
         });
-        timerTextAnimation.start();
 
         // Miscellaneous animation setup
         infoText = (TextView) this.findViewById(R.id.infoText);
@@ -150,11 +145,15 @@ public class MainActivity extends AppCompatActivity {
         settingsButtonAnimation.setDuration(1000);
         settingsButtonAnimation.setInterpolator(setupInterpolator);
 
+        // Message text setup
+        message1Text = (TextView) this.findViewById(R.id.message1);
+        message2Text = (TextView) this.findViewById(R.id.message2);
 
         // Setup broadcast stuff, messageReceiver declared further below
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver,
                 new IntentFilter("settings_menu_closed_reset_animations"));
 
+        // Animate everything
         setupAnimation(0, 0, 1000, true);
         showSettingsButton(true);
         showInfoText(true, 0, 0);
@@ -179,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
             // Show settings and info
             showSettingsButton(true);
             showInfoText(true, 0, 0);
+            showMessageText(false, 0);
             // Cancel timer and reset animations
             timer.cancel();
             int currentProgress = progressBar.getProgress();
@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
                     showInfoText(true, 1000, 5000);
                     inStages = true;
                 }
+                showMessageText(true, 0);
                 break;
 
             case 1: // Done counting minutes - await user input
@@ -216,6 +217,8 @@ public class MainActivity extends AppCompatActivity {
                 stage = 2;
                 setupAnimation(0, 0, 1000, false);
                 showInfoText(true, 1000, 0);
+                showMessageText(false, 0);
+                showMessageText(true, 1000);
                 break;
 
             case 2: // Done with user input - start last timer
@@ -223,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                 stage = 3;
                 // Start new animations from the start
                 showInfoText(false, 0, 0);
+                showMessageText(false, 0);
                 startTime = Integer.parseInt(preferences.getString("cooldown_key", "20"));
                 setAnimationProperties(0, 0, startTime, 0, linearInterpolator, false);
                 timer = new CustomCountDownTimer(startTime*1000, 100);
@@ -350,12 +354,14 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+
+        // Setup animation for help textview
         TranslateAnimation infoAnimation = new TranslateAnimation(
                 0, 0, show ? 200 : 0, show ? 0 : 200);
         infoAnimation.setInterpolator(setupInterpolator);
         infoAnimation.setFillAfter(true);
         infoAnimation.setDuration(1000);
-        infoAnimation.setStartTime(delay);
+        //infoAnimation.setStartTime(delay); // See if commenting this out breaks anything
         infoText.startAnimation(infoAnimation);
         infoHidden = !show;
 
@@ -367,6 +373,53 @@ public class MainActivity extends AppCompatActivity {
                 }
             }, timeout);
         }
+    }
+
+    private void showMessageText(final boolean show, long delay) {
+        // Show and hide message text
+
+        // No-op
+        if (!show && messagesHidden) return;
+
+        if (delay > 0) {
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override public void run() {
+                    showMessageText(show, 0);}}, delay);
+            return;
+        }
+
+        if (show) { // Update message text when we're showing it
+            switch (stage) {
+                case 1:
+                    message1Text.setText(getString(R.string.message1_1));
+                    message2Text.setText(getString(R.string.message2_1));
+                    break;
+                case 2:
+                    message1Text.setText(getString(R.string.message1_2));
+                    message2Text.setText(getString(R.string.message2_2));
+                    break;
+            }
+        }
+
+        // Setup animations for each message textview
+        int edge = progressBar.getWidth() * 2;
+        TranslateAnimation message1Animation = new TranslateAnimation(
+                show ? edge : 0, show ? 0 : -edge, 0, 0);
+        TranslateAnimation message2Animation = new TranslateAnimation(
+                show ? -edge : 0, show ? 0 : edge, 0, 0);
+        message1Animation.setInterpolator(setupInterpolator);
+        message2Animation.setInterpolator(setupInterpolator);
+        message1Animation.setFillAfter(true);
+        message2Animation.setFillAfter(true);
+        message1Animation.setDuration(1000);
+        message2Animation.setDuration(1000);
+        message1Text.startAnimation(message1Animation);
+        message2Text.startAnimation(message2Animation);
+        message1Text.setVisibility(View.VISIBLE);
+        message2Text.setVisibility(View.VISIBLE);
+        messagesHidden = !show;
+
     }
 
     // This doesn't really have to be a whole method but oh well
@@ -481,7 +534,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 
 }
